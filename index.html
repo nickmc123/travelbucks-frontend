@@ -3,734 +3,1487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>TravelBucks</title>
+    <title>TravelBucks Rewards</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --gold: #f59e0b;
+            --green: #10b981;
+            --red: #ef4444;
+            --bg: #f8fafc;
         }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            height: 100dvh;
-        }
-
+        
+        /* Header */
         .header {
             background: white;
-            padding: 1rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            flex-shrink: 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-        }
-
-        .balance-bar {
-            background: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-around;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            flex-shrink: 0;
-        }
-
-        .balance-item {
-            text-align: center;
-        }
-
-        .balance-amount {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .balance-label {
-            font-size: 0.7rem;
-            color: #666;
-            margin-top: 0.2rem;
-        }
-
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-
-        .game-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .game-card:active {
-            transform: scale(0.95);
-        }
-
-        .game-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .game-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.3rem;
-        }
-
-        .game-reward {
-            font-size: 0.75rem;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .sweepstakes-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .sweepstakes-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            gap: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .sweepstakes-icon {
-            font-size: 3rem;
-            flex-shrink: 0;
-        }
-
-        .sweepstakes-info {
-            flex: 1;
-        }
-
-        .sweepstakes-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.3rem;
-            font-size: 0.95rem;
-        }
-
-        .sweepstakes-prize {
-            color: #667eea;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .sweepstakes-countdown {
-            font-size: 0.75rem;
-            color: #666;
-        }
-
-        .btn-enter {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .btn-enter:active {
-            opacity: 0.8;
-        }
-
-        .travel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .travel-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            gap: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            align-items: center;
-        }
-
-        .travel-icon {
-            font-size: 2.5rem;
-            flex-shrink: 0;
-        }
-
-        .travel-info {
-            flex: 1;
-        }
-
-        .travel-title {
-            font-weight: 600;
-            color: #333;
-            font-size: 0.95rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .travel-price {
-            color: #667eea;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .travel-details {
-            font-size: 0.75rem;
-            color: #666;
-        }
-
-        .membership-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .membership-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .membership-card.featured {
-            border: 2px solid #667eea;
-        }
-
-        .tier-header {
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-
-        .tier-name {
-            font-size: 1.1rem;
+        
+        .logo {
+            font-size: 20px;
             font-weight: 700;
-            color: #333;
+            background: linear-gradient(135deg, var(--primary), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .tier-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .tier-features {
-            font-size: 0.8rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 0.75rem;
-        }
-
-        .btn-select {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        
+        .balance {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
             font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* Main Content */
+        .main {
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+        
+        /* Tab Content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+        
+        /* Game Grid */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .game-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            text-align: center;
             cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .btn-select:active {
-            opacity: 0.8;
-        }
-
+        
+        .game-card:active { transform: scale(0.95); }
+        
+        .game-card.gold { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .game-card.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .game-card.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .game-card.cyan { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .game-card.orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+        
+        .game-icon { font-size: 40px; margin-bottom: 8px; }
+        .game-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+        .game-reward { font-size: 12px; opacity: 0.9; }
+        
+        /* Bottom Nav */
         .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 0.5rem 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            flex-shrink: 0;
+            padding: 8px 0 20px;
+            border-top: 1px solid #e2e8f0;
+            z-index: 100;
         }
-
+        
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0.5rem;
+            padding: 8px 12px;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 600;
             cursor: pointer;
-            color: #999;
             transition: color 0.2s;
-            flex: 1;
         }
-
-        .nav-item.active {
-            color: #667eea;
-        }
-
-        .nav-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .nav-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        .toast {
+        
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 24px; margin-bottom: 4px; }
+        
+        /* Game Modal */
+        .game-modal {
+            display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: white;
-            padding: 1.5rem 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
             z-index: 1000;
-            transition: transform 0.3s;
-            text-align: center;
-            font-weight: 600;
-            color: #333;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-
-        .toast.show {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .dashboard-card {
+        
+        .game-modal.active { display: flex; }
+        
+        .game-container {
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
         }
-
-        .welcome-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-text {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-        }
-
-        .stat-box {
-            text-align: center;
-            background: #f8f9fa;
-            padding: 0.75rem;
-            border-radius: 8px;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .stat-label {
-            font-size: 0.7rem;
-            color: #666;
-            margin-top: 0.2rem;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        
+        .game-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .game-header h2 { font-size: 18px; }
+        
+        .close-btn {
+            background: rgba(255,255,255,0.2);
             border: none;
-            padding: 1rem;
-            border-radius: 12px;
-            font-weight: 600;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 20px;
             cursor: pointer;
+        }
+        
+        .game-body {
+            padding: 20px;
+            min-height: 400px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
         }
-
-        .action-btn:active {
-            opacity: 0.8;
+        
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            width: 100%;
+            max-width: 280px;
         }
-
-        .action-icon {
-            font-size: 2rem;
+        
+        .btn:active { transform: scale(0.95); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn.gold { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .btn.green { background: linear-gradient(135deg, #10b981, #059669); }
+        
+        /* ==================== SPIN WHEEL ==================== */
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 20px auto;
         }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3), inset 0 0 30px rgba(0,0,0,0.1);
+        }
+        
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            right: 0;
+            transform-origin: bottom left;
+            overflow: hidden;
+        }
+        
+        .wheel-segment-inner {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            left: -100%;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 35px solid var(--gold);
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+            z-index: 10;
+        }
+        
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+        
+        /* ==================== SCRATCH CARD ==================== */
+        .scratch-container {
+            position: relative;
+            width: 280px;
+            height: 200px;
+            margin: 20px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .scratch-prize {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        .scratch-prize-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #92400e;
+            margin-top: 10px;
+        }
+        
+        .scratch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        
+        .scratch-instruction {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 16px;
+        }
+        
+        /* ==================== TRIVIA ==================== */
+        .trivia-question {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+            color: #1e293b;
+            line-height: 1.4;
+        }
+        
+        .trivia-options {
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .trivia-option {
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .trivia-option:active { transform: scale(0.98); }
+        .trivia-option.correct { background: #d1fae5; border-color: var(--green); color: #065f46; }
+        .trivia-option.wrong { background: #fee2e2; border-color: var(--red); color: #991b1b; }
+        .trivia-option.disabled { pointer-events: none; opacity: 0.6; }
+        
+        .trivia-progress {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .trivia-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e2e8f0;
+        }
+        
+        .trivia-dot.correct { background: var(--green); }
+        .trivia-dot.wrong { background: var(--red); }
+        .trivia-dot.current { background: var(--primary); }
+        
+        /* ==================== MEMORY MATCH ==================== */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            width: 280px;
+            margin: 20px auto;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            transform-style: preserve-3d;
+        }
+        
+        .memory-card.flipped { transform: rotateY(180deg); background: white; border: 2px solid #e2e8f0; }
+        .memory-card.matched { background: linear-gradient(135deg, var(--green), #059669); transform: rotateY(180deg); }
+        .memory-card-inner { backface-visibility: hidden; }
+        .memory-card.flipped .memory-card-inner,
+        .memory-card.matched .memory-card-inner { transform: rotateY(180deg); }
+        
+        .memory-stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .memory-stat {
+            text-align: center;
+        }
+        
+        .memory-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .memory-stat-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+        
+        /* ==================== SLOTS ==================== */
+        .slots-container {
+            display: flex;
+            gap: 8px;
+            margin: 20px auto;
+            background: linear-gradient(180deg, #1e293b, #334155);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        .slot-reel {
+            width: 70px;
+            height: 90px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slot-symbols {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        
+        .slot-symbol {
+            width: 70px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        .slots-payline {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+            transform: translateY(-50%);
+            z-index: 5;
+            pointer-events: none;
+        }
+        
+        .slots-win {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+            text-align: center;
+            min-height: 36px;
+            margin-top: 16px;
+        }
+        
+        /* ==================== BONUS DROP ==================== */
+        .plinko-container {
+            position: relative;
+            width: 300px;
+            height: 350px;
+            margin: 10px auto;
+        }
+        
+        .plinko-canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+        }
+        
+        /* Result Display */
+        .result-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .result-emoji { font-size: 64px; margin-bottom: 12px; }
+        .result-text { font-size: 24px; font-weight: 700; color: #1e293b; }
+        .result-reward { font-size: 18px; color: var(--green); font-weight: 600; margin-top: 8px; }
+        
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            color: white;
+        }
+        
+        .stat-card.gold { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .stat-card.green { background: linear-gradient(135deg, #10b981, #059669); }
+        
+        .stat-value { font-size: 24px; font-weight: 700; }
+        .stat-label { font-size: 11px; opacity: 0.9; margin-top: 4px; }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--red); }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <div class="logo">✈️ TravelBucks</div>
-        </div>
-
-        <div class="balance-bar">
-            <div class="balance-item">
-                <div class="balance-amount" id="tb-balance">12,450</div>
-                <div class="balance-label">TravelBucks</div>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">✈️ TravelBucks</div>
+        <div class="balance" id="balanceDisplay">TB 5,000</div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="tab-home">
+            <div class="card">
+                <h2 style="font-size: 22px; margin-bottom: 4px;">Welcome back! 👋</h2>
+                <p style="color: #64748b;">Ready to earn TravelBucks?</p>
             </div>
-            <div class="balance-item">
-                <div class="balance-amount" id="xp-balance">2,840</div>
-                <div class="balance-label">Experience</div>
-            </div>
-        </div>
-
-        <div class="content">
-            <!-- Dashboard Tab -->
-            <div class="tab-content active" id="dashboard">
-                <div class="dashboard-card">
-                    <div class="welcome-title">Welcome back, Nick! 👋</div>
-                    <div class="welcome-text">Keep playing to unlock amazing rewards</div>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-number">47</div>
-                            <div class="stat-label">Games</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number">23</div>
-                            <div class="stat-label">Entries</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number">5</div>
-                            <div class="stat-label">Trips</div>
-                        </div>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button class="action-btn" onclick="switchTab('play')">
-                            <div class="action-icon">🎮</div>
-                            <div>Play Now</div>
-                        </button>
-                        <button class="action-btn" onclick="switchTab('sweepstakes')">
-                            <div class="action-icon">🎁</div>
-                            <div>Enter</div>
-                        </button>
-                        <button class="action-btn" onclick="switchTab('travel')">
-                            <div class="action-icon">✈️</div>
-                            <div>Book Trip</div>
-                        </button>
-                        <button class="action-btn" onclick="switchTab('membership')">
-                            <div class="action-icon">👑</div>
-                            <div>Upgrade</div>
-                        </button>
-                    </div>
+            
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="gamesPlayed">0</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="totalWon">0</div>
+                    <div class="stat-label">TB Won Today</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-value" id="xpEarned">0</div>
+                    <div class="stat-label">XP Earned</div>
                 </div>
             </div>
-
-            <!-- Play Tab -->
-            <div class="tab-content" id="play">
-                <div class="games-grid">
-                    <div class="game-card" onclick="playGame('spin', 100)">
-                        <div class="game-icon">🌍</div>
-                        <div class="game-title">Spin Globe</div>
-                        <div class="game-reward">+100 TB</div>
+            
+            <div class="card">
+                <div class="card-title">🎮 Quick Play</div>
+                <div class="game-grid">
+                    <div class="game-card" onclick="openGame('spin')">
+                        <div class="game-icon">🎡</div>
+                        <div class="game-name">Daily Spin</div>
+                        <div class="game-reward">Up to 500 TB</div>
                     </div>
-                    <div class="game-card" onclick="playGame('trivia', 200)">
-                        <div class="game-icon">🧠</div>
-                        <div class="game-title">Trivia</div>
-                        <div class="game-reward">+200 TB</div>
-                    </div>
-                    <div class="game-card" onclick="playGame('match', 150)">
-                        <div class="game-icon">🎴</div>
-                        <div class="game-title">Match Game</div>
-                        <div class="game-reward">+150 TB</div>
-                    </div>
-                    <div class="game-card" onclick="playGame('scratch', 300)">
+                    <div class="game-card gold" onclick="openGame('scratch')">
                         <div class="game-icon">🎫</div>
-                        <div class="game-title">Scratch Card</div>
-                        <div class="game-reward">+300 TB</div>
+                        <div class="game-name">Scratch & Win</div>
+                        <div class="game-reward">Up to 1,000 TB</div>
                     </div>
-                    <div class="game-card" onclick="playGame('luggage', 250)">
-                        <div class="game-icon">🧳</div>
-                        <div class="game-title">Lucky Luggage</div>
-                        <div class="game-reward">+250 TB</div>
+                    <div class="game-card green" onclick="openGame('trivia')">
+                        <div class="game-icon">🧠</div>
+                        <div class="game-name">Trivia</div>
+                        <div class="game-reward">50 TB per Q</div>
                     </div>
-                    <div class="game-card" onclick="playGame('daily', 500)">
+                    <div class="game-card pink" onclick="openGame('memory')">
+                        <div class="game-icon">🃏</div>
+                        <div class="game-name">Memory Match</div>
+                        <div class="game-reward">Up to 300 TB</div>
+                    </div>
+                    <div class="game-card cyan" onclick="openGame('slots')">
                         <div class="game-icon">🎰</div>
-                        <div class="game-title">Daily Bonus</div>
-                        <div class="game-reward">+500 TB</div>
+                        <div class="game-name">Lucky Slots</div>
+                        <div class="game-reward">Up to 2,000 TB</div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Sweepstakes Tab -->
-            <div class="tab-content" id="sweepstakes">
-                <div class="sweepstakes-list">
-                    <div class="sweepstakes-card">
-                        <div class="sweepstakes-icon">🏖️</div>
-                        <div class="sweepstakes-info">
-                            <div class="sweepstakes-title">Hawaii Paradise</div>
-                            <div class="sweepstakes-prize">$5,000 Package</div>
-                            <div class="sweepstakes-countdown">Ends in 15 days • 8 entries</div>
-                        </div>
-                        <button class="btn-enter" onclick="enterSweepstakes('hawaii')">Enter</button>
-                    </div>
-
-                    <div class="sweepstakes-card">
-                        <div class="sweepstakes-icon">🗼</div>
-                        <div class="sweepstakes-info">
-                            <div class="sweepstakes-title">European Tour</div>
-                            <div class="sweepstakes-prize">$8,000 Package</div>
-                            <div class="sweepstakes-countdown">Ends in 22 days • 3 entries</div>
-                        </div>
-                        <button class="btn-enter" onclick="enterSweepstakes('europe')">Enter</button>
-                    </div>
-
-                    <div class="sweepstakes-card">
-                        <div class="sweepstakes-icon">🏔️</div>
-                        <div class="sweepstakes-info">
-                            <div class="sweepstakes-title">Mountain Escape</div>
-                            <div class="sweepstakes-prize">$3,000 Package</div>
-                            <div class="sweepstakes-countdown">Ends in 8 days • 5 entries</div>
-                        </div>
-                        <button class="btn-enter" onclick="enterSweepstakes('mountain')">Enter</button>
-                    </div>
-
-                    <div class="sweepstakes-card">
-                        <div class="sweepstakes-icon">🏝️</div>
-                        <div class="sweepstakes-info">
-                            <div class="sweepstakes-title">Caribbean Cruise</div>
-                            <div class="sweepstakes-prize">$6,000 Package</div>
-                            <div class="sweepstakes-countdown">Ends in 30 days • 12 entries</div>
-                        </div>
-                        <button class="btn-enter" onclick="enterSweepstakes('caribbean')">Enter</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Travel Tab -->
-            <div class="tab-content" id="travel">
-                <div class="travel-list">
-                    <div class="travel-card" onclick="bookTravel('cancun')">
-                        <div class="travel-icon">🏖️</div>
-                        <div class="travel-info">
-                            <div class="travel-title">Cancun, Mexico</div>
-                            <div class="travel-price">$599</div>
-                            <div class="travel-details">5 nights • All-inclusive</div>
-                        </div>
-                    </div>
-
-                    <div class="travel-card" onclick="bookTravel('nyc')">
-                        <div class="travel-icon">🗽</div>
-                        <div class="travel-info">
-                            <div class="travel-title">New York City</div>
-                            <div class="travel-price">$899</div>
-                            <div class="travel-details">4 nights • Times Square</div>
-                        </div>
-                    </div>
-
-                    <div class="travel-card" onclick="bookTravel('dubai')">
-                        <div class="travel-icon">🕌</div>
-                        <div class="travel-info">
-                            <div class="travel-title">Dubai, UAE</div>
-                            <div class="travel-price">$1,299</div>
-                            <div class="travel-details">6 nights • Luxury hotel</div>
-                        </div>
-                    </div>
-
-                    <div class="travel-card" onclick="bookTravel('paris')">
-                        <div class="travel-icon">🗼</div>
-                        <div class="travel-info">
-                            <div class="travel-title">Paris, France</div>
-                            <div class="travel-price">$1,099</div>
-                            <div class="travel-details">5 nights • City center</div>
-                        </div>
-                    </div>
-
-                    <div class="travel-card" onclick="bookTravel('tokyo')">
-                        <div class="travel-icon">🗾</div>
-                        <div class="travel-info">
-                            <div class="travel-title">Tokyo, Japan</div>
-                            <div class="travel-price">$1,499</div>
-                            <div class="travel-details">7 nights • Modern hotel</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Membership Tab -->
-            <div class="tab-content" id="membership">
-                <div class="membership-list">
-                    <div class="membership-card">
-                        <div class="tier-header">
-                            <div class="tier-name">🥉 Bronze</div>
-                            <div class="tier-price">$9.99</div>
-                        </div>
-                        <div class="tier-features">
-                            5 games/day • Basic entries • 5% discount • Email support
-                        </div>
-                        <button class="btn-select" onclick="selectTier('bronze')">Select Bronze</button>
-                    </div>
-
-                    <div class="membership-card featured">
-                        <div class="tier-header">
-                            <div class="tier-name">🥈 Silver</div>
-                            <div class="tier-price">$19.99</div>
-                        </div>
-                        <div class="tier-features">
-                            15 games/day • Priority entries • 10% discount • Priority support • Exclusive games
-                        </div>
-                        <button class="btn-select" onclick="selectTier('silver')">Select Silver</button>
-                    </div>
-
-                    <div class="membership-card">
-                        <div class="tier-header">
-                            <div class="tier-name">🥇 Gold</div>
-                            <div class="tier-price">$29.99</div>
-                        </div>
-                        <div class="tier-features">
-                            Unlimited games • VIP access • 15% discount • 24/7 VIP support • All features • Bonus TB
-                        </div>
-                        <button class="btn-select" onclick="selectTier('gold')">Select Gold</button>
+                    <div class="game-card orange" onclick="openGame('plinko')">
+                        <div class="game-icon">⚪</div>
+                        <div class="game-name">Bonus Drop</div>
+                        <div class="game-reward">Up to 750 TB</div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('dashboard')">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-label">Home</div>
+        
+        <!-- Games Tab -->
+        <div class="tab-content" id="tab-games">
+            <div class="card">
+                <div class="card-title">🎮 Play & Earn</div>
+                <p style="color: #64748b; margin-bottom: 16px;">Win TravelBucks with every game!</p>
+                
+                <div class="game-grid">
+                    <div class="game-card" onclick="openGame('spin')">
+                        <div class="game-icon">🎡</div>
+                        <div class="game-name">Daily Spin</div>
+                        <div class="game-reward">Up to 500 TB</div>
+                    </div>
+                    <div class="game-card gold" onclick="openGame('scratch')">
+                        <div class="game-icon">🎫</div>
+                        <div class="game-name">Scratch & Win</div>
+                        <div class="game-reward">Up to 1,000 TB</div>
+                    </div>
+                    <div class="game-card green" onclick="openGame('trivia')">
+                        <div class="game-icon">🧠</div>
+                        <div class="game-name">Trivia Challenge</div>
+                        <div class="game-reward">50 TB per Question</div>
+                    </div>
+                    <div class="game-card pink" onclick="openGame('memory')">
+                        <div class="game-icon">🃏</div>
+                        <div class="game-name">Memory Match</div>
+                        <div class="game-reward">Up to 300 TB</div>
+                    </div>
+                    <div class="game-card cyan" onclick="openGame('slots')">
+                        <div class="game-icon">🎰</div>
+                        <div class="game-name">Lucky Slots</div>
+                        <div class="game-reward">Up to 2,000 TB</div>
+                    </div>
+                    <div class="game-card orange" onclick="openGame('plinko')">
+                        <div class="game-icon">⚪</div>
+                        <div class="game-name">Bonus Drop</div>
+                        <div class="game-reward">Up to 750 TB</div>
+                    </div>
+                </div>
             </div>
-            <div class="nav-item" onclick="switchTab('play')">
-                <div class="nav-icon">🎮</div>
-                <div class="nav-label">Play</div>
+        </div>
+        
+        <!-- Sweepstakes Tab -->
+        <div class="tab-content" id="tab-sweeps">
+            <div class="card">
+                <div class="card-title">🎁 Active Sweepstakes</div>
+                <p style="color: #64748b; margin-bottom: 16px;">Use your TravelBucks for entries!</p>
             </div>
-            <div class="nav-item" onclick="switchTab('sweepstakes')">
-                <div class="nav-icon">🎁</div>
-                <div class="nav-label">Win</div>
+            
+            <div class="card" style="border-left: 4px solid var(--gold);">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h3 style="font-size: 16px; margin-bottom: 4px;">✈️ Free Flight to Hawaii</h3>
+                        <p style="color: #64748b; font-size: 13px;">Round-trip for two</p>
+                    </div>
+                    <span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">HOT</span>
+                </div>
+                <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 13px;">100 TB per entry</span>
+                    <button class="btn" style="width: auto; padding: 10px 20px; font-size: 14px;" onclick="enterSweepstakes(100, 'Hawaii Flight')">Enter Now</button>
+                </div>
             </div>
-            <div class="nav-item" onclick="switchTab('travel')">
-                <div class="nav-icon">✈️</div>
-                <div class="nav-label">Travel</div>
+            
+            <div class="card" style="border-left: 4px solid var(--green);">
+                <div>
+                    <h3 style="font-size: 16px; margin-bottom: 4px;">🏨 Luxury Resort Stay</h3>
+                    <p style="color: #64748b; font-size: 13px;">5 nights at a 5-star resort</p>
+                </div>
+                <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 13px;">150 TB per entry</span>
+                    <button class="btn green" style="width: auto; padding: 10px 20px; font-size: 14px;" onclick="enterSweepstakes(150, 'Resort Stay')">Enter Now</button>
+                </div>
             </div>
-            <div class="nav-item" onclick="switchTab('membership')">
-                <div class="nav-icon">👑</div>
-                <div class="nav-label">Premium</div>
+            
+            <div class="card" style="border-left: 4px solid var(--primary);">
+                <div>
+                    <h3 style="font-size: 16px; margin-bottom: 4px;">🚢 Caribbean Cruise</h3>
+                    <p style="color: #64748b; font-size: 13px;">7-day cruise for two</p>
+                </div>
+                <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 13px;">200 TB per entry</span>
+                    <button class="btn" style="width: auto; padding: 10px 20px; font-size: 14px;" onclick="enterSweepstakes(200, 'Caribbean Cruise')">Enter Now</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Tab -->
+        <div class="tab-content" id="tab-profile">
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 64px; margin-bottom: 12px;">👤</div>
+                <h2 style="font-size: 20px; margin-bottom: 4px;">Nick M.</h2>
+                <p style="color: var(--gold); font-weight: 600;">⭐ Gold Member</p>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="profileBalance">5,000</div>
+                    <div class="stat-label">TravelBucks</div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value">2,450</div>
+                    <div class="stat-label">Total XP</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Entries</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🏆 Achievements</div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+                    <span style="background: #fef3c7; padding: 8px 12px; border-radius: 20px; font-size: 13px;">🎮 First Game</span>
+                    <span style="background: #d1fae5; padding: 8px 12px; border-radius: 20px; font-size: 13px;">🎯 5 Games Played</span>
+                    <span style="background: #e0e7ff; padding: 8px 12px; border-radius: 20px; font-size: 13px;">💰 1K TB Earned</span>
+                </div>
             </div>
         </div>
     </div>
-
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home')">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('games')">
+            <span class="nav-icon">🎮</span>
+            <span>Games</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('sweeps')">
+            <span class="nav-icon">🎁</span>
+            <span>Sweeps</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile')">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </div>
+    </div>
+    
+    <!-- Game Modal -->
+    <div class="game-modal" id="gameModal">
+        <div class="game-container">
+            <div class="game-header" id="gameHeader">
+                <h2 id="gameTitle">Game</h2>
+                <button class="close-btn" onclick="closeGame()">×</button>
+            </div>
+            <div class="game-body" id="gameBody">
+                <!-- Game content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
-        function switchTab(tabName) {
-            // Update nav
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            // Update content
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
+        // ==================== STATE ====================
+        let balance = 5000;
+        let gamesPlayed = 0;
+        let totalWon = 0;
+        let xpEarned = 0;
+        
+        // ==================== UI FUNCTIONS ====================
+        function updateBalance() {
+            document.getElementById('balanceDisplay').textContent = `TB ${balance.toLocaleString()}`;
+            document.getElementById('profileBalance').textContent = balance.toLocaleString();
         }
-
-        function showToast(message) {
+        
+        function updateStats() {
+            document.getElementById('gamesPlayed').textContent = gamesPlayed;
+            document.getElementById('totalWon').textContent = totalWon.toLocaleString();
+            document.getElementById('xpEarned').textContent = xpEarned;
+        }
+        
+        function addReward(amount, xp = 10) {
+            balance += amount;
+            totalWon += amount;
+            xpEarned += xp;
+            gamesPlayed++;
+            updateBalance();
+            updateStats();
+        }
+        
+        function showToast(message, type = '') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
+            toast.className = 'toast show ' + type;
+            setTimeout(() => toast.className = 'toast', 2500);
         }
-
-        function playGame(gameName, reward) {
-            const currentBalance = parseInt(document.getElementById('tb-balance').textContent.replace(',', ''));
-            const newBalance = currentBalance + reward;
-            document.getElementById('tb-balance').textContent = newBalance.toLocaleString();
-            showToast(`🎉 +${reward} TB Earned!`);
+        
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
-
-        function enterSweepstakes(sweepName) {
-            const cost = 100;
-            const currentBalance = parseInt(document.getElementById('tb-balance').textContent.replace(',', ''));
-            
-            if (currentBalance >= cost) {
-                const newBalance = currentBalance - cost;
-                document.getElementById('tb-balance').textContent = newBalance.toLocaleString();
-                showToast(`✅ Entry submitted!`);
+        
+        function enterSweepstakes(cost, name) {
+            if (balance >= cost) {
+                balance -= cost;
+                updateBalance();
+                showToast(`Entered ${name}! Good luck! 🍀`, 'success');
             } else {
-                showToast('❌ Not enough TB');
+                showToast('Not enough TravelBucks!', 'error');
             }
         }
-
-        function bookTravel(destination) {
-            showToast(`✈️ Booking ${destination}...`);
+        
+        // ==================== GAME MODAL ====================
+        function openGame(game) {
+            const modal = document.getElementById('gameModal');
+            const title = document.getElementById('gameTitle');
+            const body = document.getElementById('gameBody');
+            const header = document.getElementById('gameHeader');
+            
+            modal.classList.add('active');
+            
+            switch(game) {
+                case 'spin': initSpinWheel(title, body, header); break;
+                case 'scratch': initScratchCard(title, body, header); break;
+                case 'trivia': initTrivia(title, body, header); break;
+                case 'memory': initMemoryMatch(title, body, header); break;
+                case 'slots': initSlots(title, body, header); break;
+                case 'plinko': initPlinko(title, body, header); break;
+            }
         }
-
-        function selectTier(tier) {
-            showToast(`👑 ${tier.toUpperCase()} selected!`);
+        
+        function closeGame() {
+            document.getElementById('gameModal').classList.remove('active');
         }
-
-        // Prevent pull-to-refresh
-        document.body.addEventListener('touchmove', function(e) {
-            if (e.target.closest('.content')) return;
-            e.preventDefault();
-        }, { passive: false });
+        
+        // ==================== SPIN WHEEL ====================
+        const wheelPrizes = [
+            { text: '50 TB', value: 50, color: '#6366f1' },
+            { text: '100 TB', value: 100, color: '#f59e0b' },
+            { text: '25 TB', value: 25, color: '#10b981' },
+            { text: '200 TB', value: 200, color: '#ec4899' },
+            { text: '75 TB', value: 75, color: '#06b6d4' },
+            { text: '500 TB', value: 500, color: '#8b5cf6' },
+            { text: '150 TB', value: 150, color: '#f97316' },
+            { text: '50 TB', value: 50, color: '#14b8a6' }
+        ];
+        
+        let wheelSpinning = false;
+        
+        function initSpinWheel(title, body, header) {
+            title.textContent = '🎡 Daily Spin';
+            header.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+            
+            body.innerHTML = `
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel" id="wheel"></div>
+                    <div class="wheel-center">🎯</div>
+                </div>
+                <button class="btn" id="spinBtn" onclick="spinWheel()">SPIN!</button>
+            `;
+            
+            drawWheel();
+        }
+        
+        function drawWheel() {
+            const wheel = document.getElementById('wheel');
+            const segmentAngle = 360 / wheelPrizes.length;
+            
+            wheel.innerHTML = '';
+            
+            wheelPrizes.forEach((prize, i) => {
+                const segment = document.createElement('div');
+                segment.className = 'wheel-segment';
+                segment.style.transform = `rotate(${i * segmentAngle}deg) skewY(${90 - segmentAngle}deg)`;
+                
+                const inner = document.createElement('div');
+                inner.className = 'wheel-segment-inner';
+                inner.style.background = prize.color;
+                inner.style.transform = `skewY(${-(90 - segmentAngle)}deg) rotate(${segmentAngle/2}deg)`;
+                inner.textContent = prize.text;
+                
+                segment.appendChild(inner);
+                wheel.appendChild(segment);
+            });
+        }
+        
+        function spinWheel() {
+            if (wheelSpinning) return;
+            wheelSpinning = true;
+            
+            const btn = document.getElementById('spinBtn');
+            btn.disabled = true;
+            btn.textContent = 'Spinning...';
+            
+            const wheel = document.getElementById('wheel');
+            const prizeIndex = Math.floor(Math.random() * wheelPrizes.length);
+            const segmentAngle = 360 / wheelPrizes.length;
+            const extraSpins = 5;
+            const stopAngle = extraSpins * 360 + (360 - (prizeIndex * segmentAngle + segmentAngle / 2));
+            
+            wheel.style.transform = `rotate(${stopAngle}deg)`;
+            
+            setTimeout(() => {
+                const prize = wheelPrizes[prizeIndex];
+                addReward(prize.value, 15);
+                showToast(`You won ${prize.text}! 🎉`, 'success');
+                
+                btn.disabled = false;
+                btn.textContent = 'SPIN AGAIN!';
+                wheelSpinning = false;
+                wheel.style.transition = 'none';
+                wheel.style.transform = 'rotate(0deg)';
+                setTimeout(() => wheel.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)', 50);
+            }, 4500);
+        }
+        
+        // ==================== SCRATCH CARD ====================
+        let scratchPrize = 0;
+        let scratchRevealed = false;
+        
+        function initScratchCard(title, body, header) {
+            title.textContent = '🎫 Scratch & Win';
+            header.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+            scratchRevealed = false;
+            
+            const prizes = [50, 100, 150, 200, 250, 500, 750, 1000];
+            const weights = [30, 25, 15, 12, 8, 5, 3, 2];
+            scratchPrize = weightedRandom(prizes, weights);
+            
+            body.innerHTML = `
+                <div class="scratch-container" id="scratchContainer">
+                    <div class="scratch-prize">
+                        <span>🎉</span>
+                        <span class="scratch-prize-text">${scratchPrize} TB!</span>
+                    </div>
+                    <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
+                </div>
+                <p class="scratch-instruction">Scratch the card to reveal your prize!</p>
+                <button class="btn gold" id="scratchClaimBtn" style="display: none; margin-top: 16px;" onclick="claimScratchPrize()">Claim ${scratchPrize} TB!</button>
+            `;
+            
+            initScratchCanvas();
+        }
+        
+        function initScratchCanvas() {
+            const canvas = document.getElementById('scratchCanvas');
+            const container = document.getElementById('scratchContainer');
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Draw scratch overlay
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#94a3b8');
+            gradient.addColorStop(1, '#64748b');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add pattern
+            ctx.fillStyle = '#475569';
+            ctx.font = '14px Arial';
+            for (let y = 20; y < canvas.height; y += 30) {
+                for (let x = 10; x < canvas.width; x += 60) {
+                    ctx.fillText('SCRATCH', x, y);
+                }
+            }
+            
+            let isDrawing = false;
+            let scratched = 0;
+            
+            function scratch(x, y) {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 25, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Check scratch percentage
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                let transparent = 0;
+                for (let i = 3; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i] === 0) transparent++;
+                }
+                scratched = transparent / (imageData.data.length / 4);
+                
+                if (scratched > 0.4 && !scratchRevealed) {
+                    scratchRevealed = true;
+                    canvas.style.display = 'none';
+                    document.getElementById('scratchClaimBtn').style.display = 'block';
+                }
+            }
+            
+            canvas.addEventListener('mousedown', () => isDrawing = true);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const rect = canvas.getBoundingClientRect();
+                scratch(e.clientX - rect.left, e.clientY - rect.top);
+            });
+            
+            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; });
+            canvas.addEventListener('touchend', () => isDrawing = false);
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isDrawing) return;
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+            });
+        }
+        
+        function claimScratchPrize() {
+            addReward(scratchPrize, 20);
+            showToast(`You won ${scratchPrize} TB! 🎉`, 'success');
+            closeGame();
+        }
+        
+        // ==================== TRIVIA ====================
+        const triviaQuestions = [
+            { q: "What is the capital of France?", options: ["London", "Berlin", "Paris", "Madrid"], correct: 2 },
+            { q: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
+            { q: "What year did the Titanic sink?", options: ["1905", "1912", "1920", "1898"], correct: 1 },
+            { q: "Which ocean is the largest?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], correct: 3 },
+            { q: "What is the tallest mountain?", options: ["K2", "Everest", "Kilimanjaro", "Denali"], correct: 1 },
+            { q: "How many continents are there?", options: ["5", "6", "7", "8"], correct: 2 },
+            { q: "What is the currency of Japan?", options: ["Yuan", "Won", "Yen", "Ringgit"], correct: 2 },
+            { q: "Which country has the most islands?", options: ["Indonesia", "Philippines", "Sweden", "Finland"], correct: 2 }
+        ];
+        
+        let currentQuestion = 0;
+        let triviaScore = 0;
+        let triviaAnswers = [];
+        
+        function initTrivia(title, body, header) {
+            title.textContent = '🧠 Trivia Challenge';
+            header.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            
+            currentQuestion = 0;
+            triviaScore = 0;
+            triviaAnswers = [];
+            
+            // Shuffle and pick 5 questions
+            const shuffled = [...triviaQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
+            triviaQuestions.selected = shuffled;
+            
+            showTriviaQuestion(body);
+        }
+        
+        function showTriviaQuestion(body) {
+            const questions = triviaQuestions.selected;
+            
+            if (currentQuestion >= questions.length) {
+                showTriviaResults(body);
+                return;
+            }
+            
+            const q = questions[currentQuestion];
+            
+            body.innerHTML = `
+                <div class="trivia-progress">
+                    ${questions.map((_, i) => `<div class="trivia-dot ${i < currentQuestion ? (triviaAnswers[i] ? 'correct' : 'wrong') : (i === currentQuestion ? 'current' : '')}"></div>`).join('')}
+                </div>
+                <div class="trivia-question">${q.q}</div>
+                <div class="trivia-options">
+                    ${q.options.map((opt, i) => `<div class="trivia-option" onclick="answerTrivia(${i}, ${q.correct})">${opt}</div>`).join('')}
+                </div>
+            `;
+        }
+        
+        function answerTrivia(selected, correct) {
+            const options = document.querySelectorAll('.trivia-option');
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                if (i === selected && selected !== correct) opt.classList.add('wrong');
+            });
+            
+            const isCorrect = selected === correct;
+            triviaAnswers.push(isCorrect);
+            if (isCorrect) {
+                triviaScore++;
+                addReward(50, 10);
+            }
+            
+            setTimeout(() => {
+                currentQuestion++;
+                showTriviaQuestion(document.getElementById('gameBody'));
+            }, 1500);
+        }
+        
+        function showTriviaResults(body) {
+            const totalEarned = triviaScore * 50;
+            body.innerHTML = `
+                <div class="result-display">
+                    <div class="result-emoji">${triviaScore >= 4 ? '🏆' : triviaScore >= 2 ? '⭐' : '💪'}</div>
+                    <div class="result-text">${triviaScore} / 5 Correct!</div>
+                    <div class="result-reward">+${totalEarned} TravelBucks</div>
+                </div>
+                <button class="btn green" onclick="initTrivia(document.getElementById('gameTitle'), document.getElementById('gameBody'), document.getElementById('gameHeader'))">Play Again</button>
+            `;
+        }
+        
+        // ==================== MEMORY MATCH ====================
+        const memoryEmojis = ['🌴', '✈️', '🏖️', '🗺️', '🧳', '🏔️', '🚢', '🎯'];
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let memoryMoves = 0;
+        let memoryLocked = false;
+        
+        function initMemoryMatch(title, body, header) {
+            title.textContent = '🃏 Memory Match';
+            header.style.background = 'linear-gradient(135deg, #ec4899, #db2777)';
+            
+            matchedPairs = 0;
+            memoryMoves = 0;
+            flippedCards = [];
+            memoryLocked = false;
+            
+            // Create pairs and shuffle
+            memoryCards = [...memoryEmojis, ...memoryEmojis]
+                .sort(() => Math.random() - 0.5)
+                .map((emoji, i) => ({ id: i, emoji, flipped: false, matched: false }));
+            
+            renderMemoryGame(body);
+        }
+        
+        function renderMemoryGame(body) {
+            body.innerHTML = `
+                <div class="memory-stats">
+                    <div class="memory-stat">
+                        <div class="memory-stat-value">${memoryMoves}</div>
+                        <div class="memory-stat-label">Moves</div>
+                    </div>
+                    <div class="memory-stat">
+                        <div class="memory-stat-value">${matchedPairs}/8</div>
+                        <div class="memory-stat-label">Pairs</div>
+                    </div>
+                </div>
+                <div class="memory-grid" id="memoryGrid">
+                    ${memoryCards.map((card, i) => `
+                        <div class="memory-card ${card.flipped || card.matched ? 'flipped' : ''} ${card.matched ? 'matched' : ''}" onclick="flipCard(${i})">
+                            <span class="memory-card-inner">${card.flipped || card.matched ? card.emoji : '?'}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function flipCard(index) {
+            if (memoryLocked) return;
+            const card = memoryCards[index];
+            if (card.flipped || card.matched) return;
+            
+            card.flipped = true;
+            flippedCards.push(index);
+            renderMemoryGame(document.getElementById('gameBody'));
+            
+            if (flippedCards.length === 2) {
+                memoryLocked = true;
+                memoryMoves++;
+                
+                const [first, second] = flippedCards;
+                
+                if (memoryCards[first].emoji === memoryCards[second].emoji) {
+                    memoryCards[first].matched = true;
+                    memoryCards[second].matched = true;
+                    matchedPairs++;
+                    flippedCards = [];
+                    memoryLocked = false;
+                    renderMemoryGame(document.getElementById('gameBody'));
+                    
+                    if (matchedPairs === 8) {
+                        setTimeout(() => {
+                            const bonus = Math.max(0, 300 - memoryMoves * 10);
+                            addReward(100 + bonus, 25);
+                            showToast(`Memory Master! +${100 + bonus} TB! 🎉`, 'success');
+                            closeGame();
+                        }, 500);
+                    }
+                } else {
+                    setTimeout(() => {
+                        memoryCards[first].flipped = false;
+                        memoryCards[second].flipped = false;
+                        flippedCards = [];
+                        memoryLocked = false;
+                        renderMemoryGame(document.getElementById('gameBody'));
+                    }, 1000);
+                }
+            }
+        }
+        
+        // ==================== SLOTS ====================
+        const slotSymbols = ['🍒', '🍋', '🍊', '🍇', '⭐', '💎', '7️⃣', '✈️'];
+        let slotsSpinning = false;
+        
+        function initSlots(title, body, header) {
+            title.textContent = '🎰 Lucky Slots';
+            header.style.background = 'linear-gradient(135deg, #06b6d4, #0891b2)';
+            
+            body.innerHTML = `
+                <div class="slots-container" style="position: relative;">
+                    <div class="slot-reel">
+                        <div class="slot-symbols" id="reel1">${generateReelSymbols()}</div>
+                    </div>
+                    <div class="slot-reel">
+                        <div class="slot-symbols" id="reel2">${generateReelSymbols()}</div>
+                    </div>
+                    <div class="slot-reel">
+                        <div class="slot-symbols" id="reel3">${generateReelSymbols()}</div>
+                    </div>
+                </div>
+                <div class="slots-win" id="slotsWin"></div>
+                <button class="btn" id="slotsBtn" onclick="spinSlots()">SPIN - FREE!</button>
+            `;
+        }
+        
+        function generateReelSymbols() {
+            let html = '';
+            for (let i = 0; i < 20; i++) {
+                html += `<div class="slot-symbol">${slotSymbols[Math.floor(Math.random() * slotSymbols.length)]}</div>`;
+            }
+            return html;
+        }
+        
+        function spinSlots() {
+            if (slotsSpinning) return;
+            slotsSpinning = true;
+            
+            const btn = document.getElementById('slotsBtn');
+            btn.disabled = true;
+            
+            document.getElementById('slotsWin').textContent = '';
+            
+            // Generate random results
+            const results = [
+                slotSymbols[Math.floor(Math.random() * slotSymbols.length)],
+                slotSymbols[Math.floor(Math.random() * slotSymbols.length)],
+                slotSymbols[Math.floor(Math.random() * slotSymbols.length)]
+            ];
+            
+            // 20% chance of match
+            if (Math.random() < 0.2) {
+                const matchSymbol = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                results[0] = results[1] = results[2] = matchSymbol;
+            }
+            
+            // Animate reels
+            for (let i = 1; i <= 3; i++) {
+                const reel = document.getElementById(`reel${i}`);
+                reel.innerHTML = generateReelSymbols() + `<div class="slot-symbol">${results[i-1]}</div>`;
+                reel.style.transition = 'none';
+                reel.style.top = '0';
+                
+                setTimeout(() => {
+                    reel.style.transition = `top ${1 + i * 0.3}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
+                    reel.style.top = `-${(20) * 90}px`;
+                }, 50);
+            }
+            
+            setTimeout(() => {
+                // Check win
+                let win = 0;
+                if (results[0] === results[1] && results[1] === results[2]) {
+                    if (results[0] === '7️⃣') win = 2000;
+                    else if (results[0] === '💎') win = 1000;
+                    else if (results[0] === '✈️') win = 500;
+                    else win = 200;
+                } else if (results[0] === results[1] || results[1] === results[2]) {
+                    win = 25;
+                } else {
+                    win = 10; // Consolation
+                }
+                
+                if (win > 0) {
+                    addReward(win, 15);
+                    document.getElementById('slotsWin').textContent = win >= 200 ? `🎉 JACKPOT! +${win} TB! 🎉` : `+${win} TB`;
+                    if (win >= 200) showToast(`JACKPOT! +${win} TB! 🎰`, 'success');
+                }
+                
+                btn.disabled = false;
+                slotsSpinning = false;
+            }, 2500);
+        }
+        
+        // ==================== PLINKO / BONUS DROP ====================
+        function initPlinko(title, body, header) {
+            title.textContent = '⚪ Bonus Drop';
+            header.style.background = 'linear-gradient(135deg, #f97316, #ea580c)';
+            
+            body.innerHTML = `
+                <div class="plinko-container">
+                    <canvas class="plinko-canvas" id="plinkoCanvas"></canvas>
+                </div>
+                <button class="btn gold" id="plinkoBtn" onclick="dropBall()">DROP BALL</button>
+            `;
+            
+            initPlinkoCanvas();
+        }
+        
+        let plinkoCtx, plinkoBall, plinkoAnimating = false;
+        const plinkoSlots = [750, 100, 250, 50, 500, 50, 250, 100, 750];
+        
+        function initPlinkoCanvas() {
+            const canvas = document.getElementById('plinkoCanvas');
+            canvas.width = 300;
+            canvas.height = 350;
+            plinkoCtx = canvas.getContext('2d');
+            drawPlinkoBoard();
+        }
+        
+        function drawPlinkoBoard() {
+            const ctx = plinkoCtx;
+            const canvas = ctx.canvas;
+            
+            // Background
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw pegs
+            ctx.fillStyle = '#94a3b8';
+            const rows = 8;
+            const pegRadius = 5;
+            
+            for (let row = 0; row < rows; row++) {
+                const pegsInRow = row + 3;
+                const rowWidth = (pegsInRow - 1) * 30;
+                const startX = (canvas.width - rowWidth) / 2;
+                const y = 50 + row * 30;
+                
+                for (let peg = 0; peg < pegsInRow; peg++) {
+                    ctx.beginPath();
+                    ctx.arc(startX + peg * 30, y, pegRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            // Draw slots at bottom
+            const slotWidth = canvas.width / plinkoSlots.length;
+            const slotColors = ['#10b981', '#f59e0b', '#6366f1', '#94a3b8', '#ef4444', '#94a3b8', '#6366f1', '#f59e0b', '#10b981'];
+            
+            plinkoSlots.forEach((value, i) => {
+                ctx.fillStyle = slotColors[i];
+                ctx.fillRect(i * slotWidth, canvas.height - 40, slotWidth - 2, 40);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 11px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(value, i * slotWidth + slotWidth / 2, canvas.height - 15);
+            });
+            
+            // Draw ball if exists
+            if (plinkoBall) {
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(plinkoBall.x, plinkoBall.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+        
+        function dropBall() {
+            if (plinkoAnimating) return;
+            plinkoAnimating = true;
+            
+            document.getElementById('plinkoBtn').disabled = true;
+            
+            const canvas = plinkoCtx.canvas;
+            plinkoBall = {
+                x: canvas.width / 2 + (Math.random() - 0.5) * 20,
+                y: 15,
+                vx: 0,
+                vy: 0
+            };
+            
+            animatePlinko();
+        }
+        
+        function animatePlinko() {
+            const canvas = plinkoCtx.canvas;
+            const gravity = 0.3;
+            const bounce = 0.7;
+            const friction = 0.99;
+            
+            plinkoBall.vy += gravity;
+            plinkoBall.vx *= friction;
+            plinkoBall.x += plinkoBall.vx;
+            plinkoBall.y += plinkoBall.vy;
+            
+            // Bounce off walls
+            if (plinkoBall.x < 15) { plinkoBall.x = 15; plinkoBall.vx = -plinkoBall.vx * bounce; }
+            if (plinkoBall.x > canvas.width - 15) { plinkoBall.x = canvas.width - 15; plinkoBall.vx = -plinkoBall.vx * bounce; }
+            
+            // Check peg collisions
+            const rows = 8;
+            for (let row = 0; row < rows; row++) {
+                const pegsInRow = row + 3;
+                const rowWidth = (pegsInRow - 1) * 30;
+                const startX = (canvas.width - rowWidth) / 2;
+                const pegY = 50 + row * 30;
+                
+                for (let peg = 0; peg < pegsInRow; peg++) {
+                    const pegX = startX + peg * 30;
+                    const dx = plinkoBall.x - pegX;
+                    const dy = plinkoBall.y - pegY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 15) {
+                        const angle = Math.atan2(dy, dx);
+                        plinkoBall.x = pegX + Math.cos(angle) * 15;
+                        plinkoBall.y = pegY + Math.sin(angle) * 15;
+                        plinkoBall.vx = Math.cos(angle) * 3 + (Math.random() - 0.5) * 2;
+                        plinkoBall.vy = Math.sin(angle) * 3;
+                    }
+                }
+            }
+            
+            drawPlinkoBoard();
+            
+            // Check if reached bottom
+            if (plinkoBall.y >= canvas.height - 50) {
+                const slotWidth = canvas.width / plinkoSlots.length;
+                const slotIndex = Math.floor(plinkoBall.x / slotWidth);
+                const prize = plinkoSlots[Math.min(Math.max(slotIndex, 0), plinkoSlots.length - 1)];
+                
+                addReward(prize, 20);
+                showToast(`You won ${prize} TB! 🎉`, 'success');
+                
+                setTimeout(() => {
+                    plinkoBall = null;
+                    plinkoAnimating = false;
+                    document.getElementById('plinkoBtn').disabled = false;
+                    drawPlinkoBoard();
+                }, 1000);
+                return;
+            }
+            
+            requestAnimationFrame(animatePlinko);
+        }
+        
+        // ==================== UTILITY ====================
+        function weightedRandom(values, weights) {
+            const total = weights.reduce((a, b) => a + b, 0);
+            let random = Math.random() * total;
+            for (let i = 0; i < values.length; i++) {
+                random -= weights[i];
+                if (random <= 0) return values[i];
+            }
+            return values[values.length - 1];
+        }
+        
+        // Initialize
+        updateBalance();
+        updateStats();
     </script>
 </body>
 </html>
