@@ -3,425 +3,639 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TravelBucks - Gamified Travel Rewards</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <title>TravelBucks - Rewards & Travel Platform</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-hover { transition: transform 0.2s, box-shadow 0.2s; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
-        .game-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .tier-free { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-        .tier-plus { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-        .tier-premium { background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--light-gray);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .balance-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            display: inline-block;
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .balance-label {
+            opacity: 0.9;
+            font-size: 0.875rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .badge-primary {
+            background: #e0e7ff;
+            color: var(--primary);
+        }
+
+        /* Membership Tiers */
+        .tier-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-card.featured {
+            border: 3px solid var(--primary);
+            transform: scale(1.05);
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tier-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .tier-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .tier-period {
+            color: var(--gray);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .tier-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .tier-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .spinner {
+            border: 3px solid var(--light-gray);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50" x-data="travelBucksApp()">
-    
-    <!-- Navigation -->
-    <nav class="gradient-bg text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                    </svg>
-                    <span class="text-2xl font-bold">TravelBucks</span>
-                </div>
-                <div class="flex space-x-6">
-                    <button @click="currentView = 'dashboard'" :class="currentView === 'dashboard' ? 'font-bold' : ''" class="hover:text-purple-200">Dashboard</button>
-                    <button @click="currentView = 'play'" :class="currentView === 'play' ? 'font-bold' : ''" class="hover:text-purple-200">Play</button>
-                    <button @click="currentView = 'sweepstakes'" :class="currentView === 'sweepstakes' ? 'font-bold' : ''" class="hover:text-purple-200">Sweepstakes</button>
-                    <button @click="currentView = 'book'" :class="currentView === 'book' ? 'font-bold' : ''" class="hover:text-purple-200">Book Travel</button>
-                    <button @click="currentView = 'membership'" :class="currentView === 'membership' ? 'font-bold' : ''" class="hover:text-purple-200">Membership</button>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="text-sm">
-                        <div class="font-bold" x-text="user.travelbucks + ' TB'"></div>
-                        <div class="text-xs text-purple-200">Balance</div>
-                    </div>
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold">
-                        <span x-text="user.name[0]"></span>
-                    </div>
-                </div>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                ✈️ TravelBucks
+            </div>
+            <nav class="nav">
+                <a href="#dashboard">Dashboard</a>
+                <a href="#games">Play & Earn</a>
+                <a href="#sweepstakes">Sweepstakes</a>
+                <a href="#travel">Book Travel</a>
+                <a href="#membership">Membership</a>
+            </nav>
+            <div class="user-menu">
+                <button class="btn btn-outline">Sign In</button>
+                <button class="btn btn-primary">Get Started</button>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Dashboard View -->
-    <div x-show="currentView === 'dashboard'" class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Welcome back, <span x-text="user.name"></span>! 👋</h1>
-        <p class="text-gray-600 mb-8">You're on a <span class="font-semibold text-purple-600" x-text="user.tier"></span> plan</p>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Welcome to TravelBucks! 🌍</h1>
+            <p>Play games, win rewards, and travel the world</p>
+            <div class="balance-card">
+                <div class="balance-amount">2,500</div>
+                <div class="balance-label">TravelBucks Balance</div>
+            </div>
+        </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-lg shadow card-hover">
-                <div class="text-3xl mb-2">💰</div>
-                <div class="text-2xl font-bold text-purple-600" x-text="user.travelbucks"></div>
-                <div class="text-sm text-gray-600">TravelBucks</div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🎮</div>
+                <div class="stat-value">45</div>
+                <div class="stat-label">Games Played This Week</div>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow card-hover">
-                <div class="text-3xl mb-2">⭐</div>
-                <div class="text-2xl font-bold text-blue-600" x-text="user.xp"></div>
-                <div class="text-sm text-gray-600">Experience Points</div>
+            <div class="stat-card">
+                <div class="stat-icon">🎫</div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Active Sweepstakes Entries</div>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow card-hover">
-                <div class="text-3xl mb-2">🎟️</div>
-                <div class="text-2xl font-bold text-green-600" x-text="user.sweepstakesEntries"></div>
-                <div class="text-sm text-gray-600">Sweepstakes Entries</div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">1,250</div>
+                <div class="stat-label">XP Points</div>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow card-hover">
-                <div class="text-3xl mb-2">✈️</div>
-                <div class="text-2xl font-bold text-orange-600" x-text="user.bookings"></div>
-                <div class="text-sm text-gray-600">Trips Booked</div>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 class="text-2xl font-bold mb-4">Recent Activity</h2>
-            <div class="space-y-4">
-                <template x-for="activity in recentActivity" :key="activity.id">
-                    <div class="flex items-center justify-between border-b pb-3">
-                        <div class="flex items-center space-x-4">
-                            <div class="text-2xl" x-text="activity.icon"></div>
-                            <div>
-                                <div class="font-semibold" x-text="activity.title"></div>
-                                <div class="text-sm text-gray-500" x-text="activity.time"></div>
-                            </div>
-                        </div>
-                        <div class="font-bold" :class="activity.amount > 0 ? 'text-green-600' : 'text-gray-600'">
-                            <span x-text="activity.amount > 0 ? '+' + activity.amount : activity.amount"></span>
-                            <span x-text="activity.currency"></span>
-                        </div>
-                    </div>
-                </template>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value">Silver</div>
+                <div class="stat-label">Current Tier</div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <button @click="currentView = 'play'" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition">
-                <div class="text-4xl mb-2">🎮</div>
-                <div class="text-xl font-bold">Play Games</div>
-                <div class="text-sm opacity-90">Earn XP & TravelBucks</div>
-            </button>
-            <button @click="currentView = 'book'" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition">
-                <div class="text-4xl mb-2">✈️</div>
-                <div class="text-xl font-bold">Book Travel</div>
-                <div class="text-sm opacity-90">Earn rewards on bookings</div>
-            </button>
-            <button @click="currentView = 'sweepstakes'" class="bg-gradient-to-r from-green-500 to-teal-500 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition">
-                <div class="text-4xl mb-2">🎁</div>
-                <div class="text-xl font-bold">Enter Sweepstakes</div>
-                <div class="text-sm opacity-90">Win amazing prizes</div>
-            </button>
-        </div>
-    </div>
-
-    <!-- Play View -->
-    <div x-show="currentView === 'play'" class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Play & Earn 🎮</h1>
-        <p class="text-gray-600 mb-8">Play games to earn XP and TravelBucks!</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <template x-for="game in games" :key="game.id">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
-                    <div class="h-48 flex items-center justify-center text-6xl" :style="'background: ' + game.gradient">
-                        <span x-text="game.icon"></span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2" x-text="game.name"></h3>
-                        <p class="text-gray-600 text-sm mb-4" x-text="game.description"></p>
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <div class="text-sm text-gray-500">Rewards</div>
-                                <div class="font-bold text-purple-600" x-text="game.xpReward + ' XP'"></div>
-                            </div>
-                            <div>
-                                <div class="text-sm text-gray-500">Cost</div>
-                                <div class="font-bold text-orange-600" x-text="game.cost + ' TB'"></div>
-                            </div>
+        <!-- Games Section -->
+        <section class="section" id="games">
+            <div class="section-header">
+                <h2 class="section-title">🎮 Play & Earn</h2>
+                <a href="#" class="btn btn-primary">View All Games</a>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-image">🌍</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Spin the Globe</h3>
+                        <p class="card-description">Spin to win TravelBucks! Test your luck with our virtual globe.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-success">+50 XP</span>
+                            <button class="btn btn-primary">Play Now</button>
                         </div>
-                        <button @click="playGame(game)" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
-                            Play Now
-                        </button>
                     </div>
                 </div>
-            </template>
-        </div>
-    </div>
-
-    <!-- Sweepstakes View -->
-    <div x-show="currentView === 'sweepstakes'" class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Active Sweepstakes 🎁</h1>
-        <p class="text-gray-600 mb-8">Enter for a chance to win amazing travel prizes!</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <template x-for="sweepstake in sweepstakes" :key="sweepstake.id">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div class="h-48 bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center text-white">
-                        <div class="text-center">
-                            <div class="text-6xl mb-2" x-text="sweepstake.icon"></div>
-                            <div class="text-2xl font-bold" x-text="sweepstake.prize"></div>
+                <div class="card">
+                    <div class="card-image">🧠</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Travel Trivia</h3>
+                        <p class="card-description">Answer questions about world destinations and culture.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-success">+75 XP</span>
+                            <button class="btn btn-primary">Play Now</button>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2" x-text="sweepstake.name"></h3>
-                        <p class="text-gray-600 text-sm mb-4" x-text="sweepstake.description"></p>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <div class="text-sm text-gray-500">Entry Cost</div>
-                                <div class="font-bold text-purple-600" x-text="sweepstake.entryCost + ' TB'"></div>
-                            </div>
-                            <div>
-                                <div class="text-sm text-gray-500">Drawing Date</div>
-                                <div class="font-bold text-gray-800" x-text="sweepstake.drawingDate"></div>
-                            </div>
+                </div>
+                <div class="card">
+                    <div class="card-image">🎯</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Destination Match</h3>
+                        <p class="card-description">Match famous landmarks with their countries.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-success">+100 XP</span>
+                            <button class="btn btn-primary">Play Now</button>
                         </div>
-                        <div class="mb-4">
-                            <div class="text-sm text-gray-500 mb-1">Your Entries: <span class="font-bold" x-text="sweepstake.yourEntries"></span></div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-500 h-2 rounded-full" :style="'width: ' + (sweepstake.yourEntries / sweepstake.maxEntries * 100) + '%'"></div>
-                            </div>
-                            <div class="text-xs text-gray-500 mt-1">Max entries: <span x-text="sweepstake.maxEntries"></span></div>
-                        </div>
-                        <button @click="enterSweepstake(sweepstake)" :disabled="sweepstake.yourEntries >= sweepstake.maxEntries" class="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span x-show="sweepstake.yourEntries < sweepstake.maxEntries">Enter Now</span>
-                            <span x-show="sweepstake.yourEntries >= sweepstake.maxEntries">Max Entries Reached</span>
-                        </button>
-                        <p class="text-xs text-gray-500 mt-2 text-center">
-                            <a href="#" class="underline">Official Rules</a> | 
-                            <a href="#" class="underline">AMOE</a>
-                        </p>
                     </div>
-                </div>
-            </template>
-        </div>
-    </div>
-
-    <!-- Book Travel View -->
-    <div x-show="currentView === 'book'" class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Book Your Next Adventure ✈️</h1>
-        <p class="text-gray-600 mb-8">Earn TravelBucks and XP on every booking!</p>
-
-        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-bold mb-6">Search Travel</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Destination</label>
-                    <input type="text" placeholder="Where to?" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Dates</label>
-                    <input type="text" placeholder="When?" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                 </div>
             </div>
-            <button class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg transition">
-                Search Deals
-            </button>
-        </div>
+        </section>
 
-        <h2 class="text-2xl font-bold mb-6">Featured Deals 🔥</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <template x-for="deal in travelDeals" :key="deal.id">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
-                    <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-6xl">
-                        <span x-text="deal.icon"></span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2" x-text="deal.destination"></h3>
-                        <p class="text-gray-600 text-sm mb-4" x-text="deal.description"></p>
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <div class="text-sm text-gray-500">From</div>
-                                <div class="text-2xl font-bold text-purple-600" x-text="'$' + deal.price"></div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-sm text-gray-500">Earn</div>
-                                <div class="font-bold text-green-600" x-text="deal.reward + ' TB'"></div>
-                            </div>
+        <!-- Sweepstakes Section -->
+        <section class="section" id="sweepstakes">
+            <div class="section-header">
+                <h2 class="section-title">🎁 Active Sweepstakes</h2>
+                <a href="#" class="btn btn-primary">View All</a>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-image">🏝️</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Hawaii Dream Vacation</h3>
+                        <p class="card-description">Win a 7-day all-inclusive trip to Hawaii for two! Includes flights, hotel, and $1,000 spending money.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-warning">Ends in 15 days</span>
+                            <button class="btn btn-primary">Enter Now</button>
                         </div>
-                        <button class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
-                            View Details
-                        </button>
                     </div>
                 </div>
-            </template>
-        </div>
-    </div>
-
-    <!-- Membership View -->
-    <div x-show="currentView === 'membership'" class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Membership Tiers 👑</h1>
-        <p class="text-gray-600 mb-8">Unlock more rewards and benefits!</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" x-show="!loadingTiers">
-            <template x-for="tier in membershipTiers" :key="tier.id">
-                <div class="rounded-lg shadow-lg overflow-hidden card-hover" :class="tier.id === 1 ? 'tier-free' : tier.id === 2 ? 'tier-plus' : 'tier-premium'">
-                    <div class="p-8 text-center">
-                        <h3 class="text-2xl font-bold mb-2" x-text="tier.name"></h3>
-                        <div class="text-4xl font-bold mb-4" x-text="tier.monthly_price_cents === 0 ? 'Free' : '$' + (tier.monthly_price_cents / 100)"></div>
-                        <p class="text-sm mb-6" x-text="tier.monthly_price_cents === 0 ? 'Forever' : 'per month'"></p>
-                        <button @click="upgradeTier(tier)" :disabled="user.tier === tier.name" class="w-full bg-white text-purple-600 py-3 rounded-lg font-semibold hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed" :class="user.tier === tier.name ? 'ring-2 ring-green-500' : ''">
-                            <span x-show="user.tier === tier.name">✓ Current Plan</span>
-                            <span x-show="user.tier !== tier.name">Select Plan</span>
-                        </button>
-                    </div>
-                    <div class="bg-white bg-opacity-90 p-6">
-                        <h4 class="font-bold mb-3">Features:</h4>
-                        <ul class="space-y-2 text-sm">
-                            <template x-for="feature in tier.features" :key="feature">
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-2">✓</span>
-                                    <span x-text="feature"></span>
-                                </li>
-                            </template>
-                        </ul>
+                <div class="card">
+                    <div class="card-image">🇪🇺</div>
+                    <div class="card-content">
+                        <h3 class="card-title">European Adventure</h3>
+                        <p class="card-description">Explore 3 European cities with airfare and accommodation included.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-warning">Ends in 30 days</span>
+                            <button class="btn btn-primary">Enter Now</button>
+                        </div>
                     </div>
                 </div>
-            </template>
-        </div>
+            </div>
+        </section>
 
-        <div x-show="loadingTiers" class="text-center py-12">
-            <div class="text-4xl mb-4">⏳</div>
-            <div class="text-gray-600">Loading membership tiers...</div>
-        </div>
-    </div>
+        <!-- Membership Section -->
+        <section class="section" id="membership">
+            <div class="section-header">
+                <h2 class="section-title">👑 Membership Tiers</h2>
+            </div>
+            <div id="membership-loading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading membership tiers from API...</p>
+            </div>
+            <div id="membership-tiers" class="cards-grid" style="display: none;">
+                <!-- Tiers will be loaded here -->
+            </div>
+        </section>
 
-    <!-- Success Toast -->
-    <div x-show="showToast" x-transition class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-2">
-        <span class="text-2xl">🎉</span>
-        <span x-text="toastMessage"></span>
+        <!-- Travel Deals -->
+        <section class="section" id="travel">
+            <div class="section-header">
+                <h2 class="section-title">✈️ Featured Travel Deals</h2>
+                <a href="#" class="btn btn-primary">Search All Destinations</a>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-image">🏖️</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Cancun, Mexico</h3>
+                        <p class="card-description">5 nights at beachfront resort with all meals included.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-primary">From $899</span>
+                            <button class="btn btn-primary">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image">🗽</div>
+                    <div class="card-content">
+                        <h3 class="card-title">New York City</h3>
+                        <p class="card-description">3 nights in Manhattan with Broadway show tickets.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-primary">From $699</span>
+                            <button class="btn btn-primary">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image">🕌</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Dubai, UAE</h3>
+                        <p class="card-description">Luxury 7-night stay with desert safari and city tour.</p>
+                        <div class="card-footer">
+                            <span class="badge badge-primary">From $1,499</span>
+                            <button class="btn btn-primary">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script>
-        function travelBucksApp() {
-            return {
-                currentView: 'dashboard',
-                showToast: false,
-                toastMessage: '',
-                loadingTiers: false,
-                apiUrl: 'https://travelbucks-rewards-production.up.railway.app',
+        // Load membership tiers from API
+        async function loadMembershipTiers() {
+            try {
+                const response = await fetch('https://travelbucks-rewards-production.up.railway.app/api/v1/membership/tiers');
+                const data = await response.json();
                 
-                user: {
-                    name: 'Sarah',
-                    tier: 'TravelBucks Plus',
-                    travelbucks: 2450,
-                    xp: 8750,
-                    sweepstakesEntries: 15,
-                    bookings: 3
-                },
-
-                recentActivity: [
-                    { id: 1, icon: '🎮', title: 'Played Spin the Globe', amount: 50, currency: 'XP', time: '2 hours ago' },
-                    { id: 2, icon: '✈️', title: 'Booked flight to Hawaii', amount: 500, currency: 'TB', time: '1 day ago' },
-                    { id: 3, icon: '🎁', title: 'Entered Grand Prize Draw', amount: -100, currency: 'TB', time: '2 days ago' },
-                    { id: 4, icon: '⭐', title: 'Reached Level 10', amount: 200, currency: 'TB', time: '3 days ago' }
-                ],
-
-                games: [
-                    { id: 1, name: 'Spin the Globe', icon: '🌍', description: 'Spin and discover destinations!', xpReward: 50, cost: 10, gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-                    { id: 2, name: 'Travel Trivia', icon: '🧠', description: 'Test your travel knowledge', xpReward: 75, cost: 15, gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-                    { id: 3, name: 'Destination Match', icon: '🎯', description: 'Match famous landmarks', xpReward: 60, cost: 12, gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
-                    { id: 4, name: 'Scratch & Win', icon: '💰', description: 'Instant prizes!', xpReward: 100, cost: 20, gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)' },
-                    { id: 5, name: 'Lucky Luggage', icon: '🎲', description: 'Roll the dice!', xpReward: 80, cost: 15, gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' }
-                ],
-
-                sweepstakes: [
-                    { id: 1, name: 'Hawaii Getaway', icon: '🏝️', prize: '$5,000 Trip', description: 'Win a luxury 7-night stay in Maui with flights included', entryCost: 100, drawingDate: 'Feb 15', yourEntries: 2, maxEntries: 10 },
-                    { id: 2, name: 'Europe Adventure', icon: '🗼', prize: '$10,000 Trip', description: 'Grand tour of Paris, Rome, and Barcelona', entryCost: 150, drawingDate: 'Mar 1', yourEntries: 1, maxEntries: 15 }
-                ],
-
-                travelDeals: [
-                    { id: 1, destination: 'Cancun', icon: '🏖️', description: '5 nights all-inclusive resort', price: 899, reward: 450 },
-                    { id: 2, destination: 'New York', icon: '🗽', description: '4 nights + Broadway show', price: 699, reward: 350 },
-                    { id: 3, destination: 'Dubai', icon: '🕌', description: '7 nights luxury stay', price: 1599, reward: 800 }
-                ],
-
-                membershipTiers: [],
-
-                init() {
-                    this.loadMembershipTiers();
-                },
-
-                async loadMembershipTiers() {
-                    this.loadingTiers = true;
-                    try {
-                        const response = await fetch(`${this.apiUrl}/api/v1/membership/tiers`);
-                        if (response.ok) {
-                            const data = await response.json();
-                            this.membershipTiers = data.map(tier => ({
-                                ...tier,
-                                features: JSON.parse(tier.features || '[]')
-                            }));
-                        }
-                    } catch (error) {
-                        console.error('Error loading tiers:', error);
-                        // Fallback data
-                        this.membershipTiers = [
-                            { id: 1, name: 'TravelBucks Go', monthly_price_cents: 0, features: ['Earn XP & TravelBucks', 'Access to all games', 'Basic sweepstakes entries'] },
-                            { id: 2, name: 'TravelBucks Plus', monthly_price_cents: 999, features: ['Everything in Go', '2x XP multiplier', 'Exclusive sweepstakes', 'Priority booking'] },
-                            { id: 3, name: 'TravelBucks Premium', monthly_price_cents: 1999, features: ['Everything in Plus', '3x XP multiplier', 'VIP sweepstakes', 'Concierge service', 'Free hotel upgrades'] }
-                        ];
-                    } finally {
-                        this.loadingTiers = false;
-                    }
-                },
-
-                playGame(game) {
-                    if (this.user.travelbucks >= game.cost) {
-                        this.user.travelbucks -= game.cost;
-                        this.user.xp += game.xpReward;
-                        this.toast(`You earned ${game.xpReward} XP!`);
-                        this.recentActivity.unshift({
-                            id: Date.now(),
-                            icon: game.icon,
-                            title: `Played ${game.name}`,
-                            amount: game.xpReward,
-                            currency: 'XP',
-                            time: 'Just now'
-                        });
-                    } else {
-                        this.toast('Not enough TravelBucks!');
-                    }
-                },
-
-                enterSweepstake(sweepstake) {
-                    if (sweepstake.yourEntries < sweepstake.maxEntries && this.user.travelbucks >= sweepstake.entryCost) {
-                        this.user.travelbucks -= sweepstake.entryCost;
-                        sweepstake.yourEntries++;
-                        this.user.sweepstakesEntries++;
-                        this.toast('Entry successful! Good luck! 🍀');
-                        this.recentActivity.unshift({
-                            id: Date.now(),
-                            icon: '🎁',
-                            title: `Entered ${sweepstake.name}`,
-                            amount: -sweepstake.entryCost,
-                            currency: 'TB',
-                            time: 'Just now'
-                        });
-                    }
-                },
-
-                upgradeTier(tier) {
-                    if (this.user.tier !== tier.name) {
-                        this.user.tier = tier.name;
-                        this.toast(`Upgraded to ${tier.name}!`);
-                    }
-                },
-
-                toast(message) {
-                    this.toastMessage = message;
-                    this.showToast = true;
-                    setTimeout(() => {
-                        this.showToast = false;
-                    }, 3000);
+                const container = document.getElementById('membership-tiers');
+                const loading = document.getElementById('membership-loading');
+                
+                if (data.data && data.data.length > 0) {
+                    container.innerHTML = data.data.map((tier, index) => {
+                        const icons = ['🥉', '🥈', '🥇'];
+                        const isFeatured = index === 1; // Silver tier featured
+                        
+                        return `
+                            <div class="tier-card ${isFeatured ? 'featured' : ''}">
+                                ${isFeatured ? '<div class="tier-badge">Most Popular</div>' : ''}
+                                <div class="tier-icon">${icons[index] || '⭐'}</div>
+                                <h3 class="tier-name">${tier.tier_name}</h3>
+                                <div class="tier-price">$${tier.subscription_price || '0'}</div>
+                                <div class="tier-period">per month</div>
+                                <ul class="tier-features">
+                                    <li>✓ ${tier.max_daily_plays || 'Unlimited'} daily plays</li>
+                                    <li>✓ ${tier.sweepstakes_entry_multiplier}x sweepstakes multiplier</li>
+                                    <li>✓ ${tier.booking_discount_percent}% travel booking discount</li>
+                                    ${tier.priority_support ? '<li>✓ Priority customer support</li>' : ''}
+                                    ${tier.exclusive_games ? '<li>✓ Exclusive games access</li>' : ''}
+                                </ul>
+                                <button class="btn btn-primary" style="width: 100%;">
+                                    ${tier.subscription_price > 0 ? 'Upgrade Now' : 'Current Plan'}
+                                </button>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    loading.style.display = 'none';
+                    container.style.display = 'grid';
+                } else {
+                    throw new Error('No tiers found');
                 }
+            } catch (error) {
+                console.error('Error loading tiers:', error);
+                document.getElementById('membership-loading').innerHTML = `
+                    <p style="color: #ef4444;">Unable to load membership tiers. Please try again later.</p>
+                `;
             }
         }
+
+        // Load tiers on page load
+        loadMembershipTiers();
     </script>
 </body>
 </html>
