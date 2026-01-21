@@ -2,640 +2,735 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TravelBucks - Rewards & Travel Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>TravelBucks</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #ec4899;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --dark: #1e293b;
-            --gray: #64748b;
-            --light-gray: #f1f5f9;
-            --white: #ffffff;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--light-gray);
-            color: var(--dark);
-            line-height: 1.6;
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            height: 100dvh;
         }
 
-        /* Header */
         .header {
             background: white;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
         }
 
-        .nav {
+        .balance-bar {
+            background: white;
+            padding: 1rem;
             display: flex;
-            gap: 2rem;
+            justify-content: space-around;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
         }
 
-        .nav a {
-            color: var(--gray);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .nav a:hover {
-            color: var(--primary);
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-            font-size: 0.875rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow);
-        }
-
-        .btn-outline {
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            background: transparent;
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 4rem 2rem;
-            border-radius: 1rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-
-        .balance-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            display: inline-block;
+        .balance-item {
+            text-align: center;
         }
 
         .balance-amount {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
         }
 
         .balance-label {
-            opacity: 0.9;
-            font-size: 0.875rem;
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.2rem;
         }
 
-        /* Stats Grid */
-        .stats-grid {
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
         }
 
-        .stat-card {
+        .game-card {
             background: white;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-label {
-            color: var(--gray);
-            font-size: 0.875rem;
-        }
-
-        /* Section */
-        .section {
-            margin-bottom: 3rem;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-        }
-
-        /* Cards Grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-        }
-
-        .card-content {
-            padding: 1.5rem;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-description {
-            color: var(--gray);
-            margin-bottom: 1rem;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid var(--light-gray);
-        }
-
-        .badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-success {
-            background: #d1fae5;
-            color: var(--success);
-        }
-
-        .badge-warning {
-            background: #fef3c7;
-            color: var(--warning);
-        }
-
-        .badge-primary {
-            background: #e0e7ff;
-            color: var(--primary);
-        }
-
-        /* Membership Tiers */
-        .tier-card {
-            background: white;
-            border-radius: 0.75rem;
-            padding: 2rem;
-            box-shadow: var(--shadow);
+            border-radius: 12px;
+            padding: 1rem;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .tier-card.featured {
-            border: 3px solid var(--primary);
-            transform: scale(1.05);
+        .game-card:active {
+            transform: scale(0.95);
         }
 
-        .tier-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: var(--primary);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
+        .game-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .game-reward {
             font-size: 0.75rem;
+            color: #667eea;
             font-weight: 600;
         }
 
-        .tier-icon {
+        .sweepstakes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sweepstakes-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .sweepstakes-icon {
             font-size: 3rem;
-            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .sweepstakes-info {
+            flex: 1;
+        }
+
+        .sweepstakes-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .sweepstakes-prize {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .sweepstakes-countdown {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .btn-enter {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .btn-enter:active {
+            opacity: 0.8;
+        }
+
+        .travel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .travel-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            align-items: center;
+        }
+
+        .travel-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .travel-info {
+            flex: 1;
+        }
+
+        .travel-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .travel-price {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .travel-details {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .membership-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .membership-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .membership-card.featured {
+            border: 2px solid #667eea;
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
         }
 
         .tier-name {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            color: #333;
         }
 
         .tier-price {
-            font-size: 2.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .tier-period {
-            color: var(--gray);
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
+            color: #667eea;
         }
 
         .tier-features {
-            list-style: none;
-            margin-bottom: 1.5rem;
-            text-align: left;
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
         }
 
-        .tier-features li {
+        .btn-select {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-select:active {
+            opacity: 0.8;
+        }
+
+        .bottom-nav {
+            background: white;
+            display: flex;
+            justify-content: space-around;
             padding: 0.5rem 0;
-            border-bottom: 1px solid var(--light-gray);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
         }
 
-        .tier-features li:last-child {
-            border-bottom: none;
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+            flex: 1;
         }
 
-        /* Loading */
-        .loading {
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: transform 0.3s;
             text-align: center;
-            padding: 3rem;
-            color: var(--gray);
+            font-weight: 600;
+            color: #333;
         }
 
-        .spinner {
-            border: 3px solid var(--light-gray);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+        .toast.show {
+            transform: translate(-50%, -50%) scale(1);
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .nav {
-                display: none;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+        .welcome-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.2rem;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:active {
+            opacity: 0.8;
+        }
+
+        .action-icon {
+            font-size: 2rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                ✈️ TravelBucks
-            </div>
-            <nav class="nav">
-                <a href="#dashboard">Dashboard</a>
-                <a href="#games">Play & Earn</a>
-                <a href="#sweepstakes">Sweepstakes</a>
-                <a href="#travel">Book Travel</a>
-                <a href="#membership">Membership</a>
-            </nav>
-            <div class="user-menu">
-                <button class="btn btn-outline">Sign In</button>
-                <button class="btn btn-primary">Get Started</button>
-            </div>
+    <div class="app-container">
+        <div class="header">
+            <div class="logo">✈️ TravelBucks</div>
         </div>
-    </header>
 
-    <div class="container">
-        <!-- Hero Section -->
-        <div class="hero">
-            <h1>Welcome to TravelBucks! 🌍</h1>
-            <p>Play games, win rewards, and travel the world</p>
-            <div class="balance-card">
-                <div class="balance-amount">2,500</div>
-                <div class="balance-label">TravelBucks Balance</div>
+        <div class="balance-bar">
+            <div class="balance-item">
+                <div class="balance-amount" id="tb-balance">12,450</div>
+                <div class="balance-label">TravelBucks</div>
+            </div>
+            <div class="balance-item">
+                <div class="balance-amount" id="xp-balance">2,840</div>
+                <div class="balance-label">Experience</div>
             </div>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">🎮</div>
-                <div class="stat-value">45</div>
-                <div class="stat-label">Games Played This Week</div>
+        <div class="content">
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="dashboard-card">
+                    <div class="welcome-title">Welcome back, Nick! 👋</div>
+                    <div class="welcome-text">Keep playing to unlock amazing rewards</div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-number">47</div>
+                            <div class="stat-label">Games</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">23</div>
+                            <div class="stat-label">Entries</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Trips</div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="switchTab('play')">
+                            <div class="action-icon">🎮</div>
+                            <div>Play Now</div>
+                        </button>
+                        <button class="action-btn" onclick="switchTab('sweepstakes')">
+                            <div class="action-icon">🎁</div>
+                            <div>Enter</div>
+                        </button>
+                        <button class="action-btn" onclick="switchTab('travel')">
+                            <div class="action-icon">✈️</div>
+                            <div>Book Trip</div>
+                        </button>
+                        <button class="action-btn" onclick="switchTab('membership')">
+                            <div class="action-icon">👑</div>
+                            <div>Upgrade</div>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">🎫</div>
-                <div class="stat-value">12</div>
-                <div class="stat-label">Active Sweepstakes Entries</div>
+
+            <!-- Play Tab -->
+            <div class="tab-content" id="play">
+                <div class="games-grid">
+                    <div class="game-card" onclick="playGame('spin', 100)">
+                        <div class="game-icon">🌍</div>
+                        <div class="game-title">Spin Globe</div>
+                        <div class="game-reward">+100 TB</div>
+                    </div>
+                    <div class="game-card" onclick="playGame('trivia', 200)">
+                        <div class="game-icon">🧠</div>
+                        <div class="game-title">Trivia</div>
+                        <div class="game-reward">+200 TB</div>
+                    </div>
+                    <div class="game-card" onclick="playGame('match', 150)">
+                        <div class="game-icon">🎴</div>
+                        <div class="game-title">Match Game</div>
+                        <div class="game-reward">+150 TB</div>
+                    </div>
+                    <div class="game-card" onclick="playGame('scratch', 300)">
+                        <div class="game-icon">🎫</div>
+                        <div class="game-title">Scratch Card</div>
+                        <div class="game-reward">+300 TB</div>
+                    </div>
+                    <div class="game-card" onclick="playGame('luggage', 250)">
+                        <div class="game-icon">🧳</div>
+                        <div class="game-title">Lucky Luggage</div>
+                        <div class="game-reward">+250 TB</div>
+                    </div>
+                    <div class="game-card" onclick="playGame('daily', 500)">
+                        <div class="game-icon">🎰</div>
+                        <div class="game-title">Daily Bonus</div>
+                        <div class="game-reward">+500 TB</div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">⭐</div>
-                <div class="stat-value">1,250</div>
-                <div class="stat-label">XP Points</div>
+
+            <!-- Sweepstakes Tab -->
+            <div class="tab-content" id="sweepstakes">
+                <div class="sweepstakes-list">
+                    <div class="sweepstakes-card">
+                        <div class="sweepstakes-icon">🏖️</div>
+                        <div class="sweepstakes-info">
+                            <div class="sweepstakes-title">Hawaii Paradise</div>
+                            <div class="sweepstakes-prize">$5,000 Package</div>
+                            <div class="sweepstakes-countdown">Ends in 15 days • 8 entries</div>
+                        </div>
+                        <button class="btn-enter" onclick="enterSweepstakes('hawaii')">Enter</button>
+                    </div>
+
+                    <div class="sweepstakes-card">
+                        <div class="sweepstakes-icon">🗼</div>
+                        <div class="sweepstakes-info">
+                            <div class="sweepstakes-title">European Tour</div>
+                            <div class="sweepstakes-prize">$8,000 Package</div>
+                            <div class="sweepstakes-countdown">Ends in 22 days • 3 entries</div>
+                        </div>
+                        <button class="btn-enter" onclick="enterSweepstakes('europe')">Enter</button>
+                    </div>
+
+                    <div class="sweepstakes-card">
+                        <div class="sweepstakes-icon">🏔️</div>
+                        <div class="sweepstakes-info">
+                            <div class="sweepstakes-title">Mountain Escape</div>
+                            <div class="sweepstakes-prize">$3,000 Package</div>
+                            <div class="sweepstakes-countdown">Ends in 8 days • 5 entries</div>
+                        </div>
+                        <button class="btn-enter" onclick="enterSweepstakes('mountain')">Enter</button>
+                    </div>
+
+                    <div class="sweepstakes-card">
+                        <div class="sweepstakes-icon">🏝️</div>
+                        <div class="sweepstakes-info">
+                            <div class="sweepstakes-title">Caribbean Cruise</div>
+                            <div class="sweepstakes-prize">$6,000 Package</div>
+                            <div class="sweepstakes-countdown">Ends in 30 days • 12 entries</div>
+                        </div>
+                        <button class="btn-enter" onclick="enterSweepstakes('caribbean')">Enter</button>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">🏆</div>
-                <div class="stat-value">Silver</div>
-                <div class="stat-label">Current Tier</div>
+
+            <!-- Travel Tab -->
+            <div class="tab-content" id="travel">
+                <div class="travel-list">
+                    <div class="travel-card" onclick="bookTravel('cancun')">
+                        <div class="travel-icon">🏖️</div>
+                        <div class="travel-info">
+                            <div class="travel-title">Cancun, Mexico</div>
+                            <div class="travel-price">$599</div>
+                            <div class="travel-details">5 nights • All-inclusive</div>
+                        </div>
+                    </div>
+
+                    <div class="travel-card" onclick="bookTravel('nyc')">
+                        <div class="travel-icon">🗽</div>
+                        <div class="travel-info">
+                            <div class="travel-title">New York City</div>
+                            <div class="travel-price">$899</div>
+                            <div class="travel-details">4 nights • Times Square</div>
+                        </div>
+                    </div>
+
+                    <div class="travel-card" onclick="bookTravel('dubai')">
+                        <div class="travel-icon">🕌</div>
+                        <div class="travel-info">
+                            <div class="travel-title">Dubai, UAE</div>
+                            <div class="travel-price">$1,299</div>
+                            <div class="travel-details">6 nights • Luxury hotel</div>
+                        </div>
+                    </div>
+
+                    <div class="travel-card" onclick="bookTravel('paris')">
+                        <div class="travel-icon">🗼</div>
+                        <div class="travel-info">
+                            <div class="travel-title">Paris, France</div>
+                            <div class="travel-price">$1,099</div>
+                            <div class="travel-details">5 nights • City center</div>
+                        </div>
+                    </div>
+
+                    <div class="travel-card" onclick="bookTravel('tokyo')">
+                        <div class="travel-icon">🗾</div>
+                        <div class="travel-info">
+                            <div class="travel-title">Tokyo, Japan</div>
+                            <div class="travel-price">$1,499</div>
+                            <div class="travel-details">7 nights • Modern hotel</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membership Tab -->
+            <div class="tab-content" id="membership">
+                <div class="membership-list">
+                    <div class="membership-card">
+                        <div class="tier-header">
+                            <div class="tier-name">🥉 Bronze</div>
+                            <div class="tier-price">$9.99</div>
+                        </div>
+                        <div class="tier-features">
+                            5 games/day • Basic entries • 5% discount • Email support
+                        </div>
+                        <button class="btn-select" onclick="selectTier('bronze')">Select Bronze</button>
+                    </div>
+
+                    <div class="membership-card featured">
+                        <div class="tier-header">
+                            <div class="tier-name">🥈 Silver</div>
+                            <div class="tier-price">$19.99</div>
+                        </div>
+                        <div class="tier-features">
+                            15 games/day • Priority entries • 10% discount • Priority support • Exclusive games
+                        </div>
+                        <button class="btn-select" onclick="selectTier('silver')">Select Silver</button>
+                    </div>
+
+                    <div class="membership-card">
+                        <div class="tier-header">
+                            <div class="tier-name">🥇 Gold</div>
+                            <div class="tier-price">$29.99</div>
+                        </div>
+                        <div class="tier-features">
+                            Unlimited games • VIP access • 15% discount • 24/7 VIP support • All features • Bonus TB
+                        </div>
+                        <button class="btn-select" onclick="selectTier('gold')">Select Gold</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Games Section -->
-        <section class="section" id="games">
-            <div class="section-header">
-                <h2 class="section-title">🎮 Play & Earn</h2>
-                <a href="#" class="btn btn-primary">View All Games</a>
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('dashboard')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
             </div>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-image">🌍</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Spin the Globe</h3>
-                        <p class="card-description">Spin to win TravelBucks! Test your luck with our virtual globe.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-success">+50 XP</span>
-                            <button class="btn btn-primary">Play Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-image">🧠</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Travel Trivia</h3>
-                        <p class="card-description">Answer questions about world destinations and culture.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-success">+75 XP</span>
-                            <button class="btn btn-primary">Play Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-image">🎯</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Destination Match</h3>
-                        <p class="card-description">Match famous landmarks with their countries.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-success">+100 XP</span>
-                            <button class="btn btn-primary">Play Now</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="nav-item" onclick="switchTab('play')">
+                <div class="nav-icon">🎮</div>
+                <div class="nav-label">Play</div>
             </div>
-        </section>
-
-        <!-- Sweepstakes Section -->
-        <section class="section" id="sweepstakes">
-            <div class="section-header">
-                <h2 class="section-title">🎁 Active Sweepstakes</h2>
-                <a href="#" class="btn btn-primary">View All</a>
+            <div class="nav-item" onclick="switchTab('sweepstakes')">
+                <div class="nav-icon">🎁</div>
+                <div class="nav-label">Win</div>
             </div>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-image">🏝️</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Hawaii Dream Vacation</h3>
-                        <p class="card-description">Win a 7-day all-inclusive trip to Hawaii for two! Includes flights, hotel, and $1,000 spending money.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-warning">Ends in 15 days</span>
-                            <button class="btn btn-primary">Enter Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-image">🇪🇺</div>
-                    <div class="card-content">
-                        <h3 class="card-title">European Adventure</h3>
-                        <p class="card-description">Explore 3 European cities with airfare and accommodation included.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-warning">Ends in 30 days</span>
-                            <button class="btn btn-primary">Enter Now</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="nav-item" onclick="switchTab('travel')">
+                <div class="nav-icon">✈️</div>
+                <div class="nav-label">Travel</div>
             </div>
-        </section>
-
-        <!-- Membership Section -->
-        <section class="section" id="membership">
-            <div class="section-header">
-                <h2 class="section-title">👑 Membership Tiers</h2>
+            <div class="nav-item" onclick="switchTab('membership')">
+                <div class="nav-icon">👑</div>
+                <div class="nav-label">Premium</div>
             </div>
-            <div id="membership-loading" class="loading">
-                <div class="spinner"></div>
-                <p>Loading membership tiers from API...</p>
-            </div>
-            <div id="membership-tiers" class="cards-grid" style="display: none;">
-                <!-- Tiers will be loaded here -->
-            </div>
-        </section>
-
-        <!-- Travel Deals -->
-        <section class="section" id="travel">
-            <div class="section-header">
-                <h2 class="section-title">✈️ Featured Travel Deals</h2>
-                <a href="#" class="btn btn-primary">Search All Destinations</a>
-            </div>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-image">🏖️</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Cancun, Mexico</h3>
-                        <p class="card-description">5 nights at beachfront resort with all meals included.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-primary">From $899</span>
-                            <button class="btn btn-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-image">🗽</div>
-                    <div class="card-content">
-                        <h3 class="card-title">New York City</h3>
-                        <p class="card-description">3 nights in Manhattan with Broadway show tickets.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-primary">From $699</span>
-                            <button class="btn btn-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-image">🕌</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Dubai, UAE</h3>
-                        <p class="card-description">Luxury 7-night stay with desert safari and city tour.</p>
-                        <div class="card-footer">
-                            <span class="badge badge-primary">From $1,499</span>
-                            <button class="btn btn-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </div>
 
+    <div class="toast" id="toast"></div>
+
     <script>
-        // Load membership tiers from API
-        async function loadMembershipTiers() {
-            try {
-                const response = await fetch('https://travelbucks-rewards-production.up.railway.app/api/v1/membership/tiers');
-                const data = await response.json();
-                
-                const container = document.getElementById('membership-tiers');
-                const loading = document.getElementById('membership-loading');
-                
-                if (data.data && data.data.length > 0) {
-                    container.innerHTML = data.data.map((tier, index) => {
-                        const icons = ['🥉', '🥈', '🥇'];
-                        const isFeatured = index === 1; // Silver tier featured
-                        
-                        return `
-                            <div class="tier-card ${isFeatured ? 'featured' : ''}">
-                                ${isFeatured ? '<div class="tier-badge">Most Popular</div>' : ''}
-                                <div class="tier-icon">${icons[index] || '⭐'}</div>
-                                <h3 class="tier-name">${tier.tier_name}</h3>
-                                <div class="tier-price">$${tier.subscription_price || '0'}</div>
-                                <div class="tier-period">per month</div>
-                                <ul class="tier-features">
-                                    <li>✓ ${tier.max_daily_plays || 'Unlimited'} daily plays</li>
-                                    <li>✓ ${tier.sweepstakes_entry_multiplier}x sweepstakes multiplier</li>
-                                    <li>✓ ${tier.booking_discount_percent}% travel booking discount</li>
-                                    ${tier.priority_support ? '<li>✓ Priority customer support</li>' : ''}
-                                    ${tier.exclusive_games ? '<li>✓ Exclusive games access</li>' : ''}
-                                </ul>
-                                <button class="btn btn-primary" style="width: 100%;">
-                                    ${tier.subscription_price > 0 ? 'Upgrade Now' : 'Current Plan'}
-                                </button>
-                            </div>
-                        `;
-                    }).join('');
-                    
-                    loading.style.display = 'none';
-                    container.style.display = 'grid';
-                } else {
-                    throw new Error('No tiers found');
-                }
-            } catch (error) {
-                console.error('Error loading tiers:', error);
-                document.getElementById('membership-loading').innerHTML = `
-                    <p style="color: #ef4444;">Unable to load membership tiers. Please try again later.</p>
-                `;
+        function switchTab(tabName) {
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function playGame(gameName, reward) {
+            const currentBalance = parseInt(document.getElementById('tb-balance').textContent.replace(',', ''));
+            const newBalance = currentBalance + reward;
+            document.getElementById('tb-balance').textContent = newBalance.toLocaleString();
+            showToast(`🎉 +${reward} TB Earned!`);
+        }
+
+        function enterSweepstakes(sweepName) {
+            const cost = 100;
+            const currentBalance = parseInt(document.getElementById('tb-balance').textContent.replace(',', ''));
+            
+            if (currentBalance >= cost) {
+                const newBalance = currentBalance - cost;
+                document.getElementById('tb-balance').textContent = newBalance.toLocaleString();
+                showToast(`✅ Entry submitted!`);
+            } else {
+                showToast('❌ Not enough TB');
             }
         }
 
-        // Load tiers on page load
-        loadMembershipTiers();
+        function bookTravel(destination) {
+            showToast(`✈️ Booking ${destination}...`);
+        }
+
+        function selectTier(tier) {
+            showToast(`👑 ${tier.toUpperCase()} selected!`);
+        }
+
+        // Prevent pull-to-refresh
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.content')) return;
+            e.preventDefault();
+        }, { passive: false });
     </script>
 </body>
 </html>
